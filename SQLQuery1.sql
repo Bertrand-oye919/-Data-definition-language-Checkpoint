@@ -75,8 +75,8 @@ INSERT INTO employee_project (employee_num_e, project_num_p, role) VALUES
 (101, 204, 'Network Specialist');
 
 
-'''modifying table employee_project with employee_num_e and project_num_p where it is = 101 and 201 
-respectfully and changing the role from frontend developer to full stack developer'''
+/*modifying table employee_project with employee_num_e and project_num_p where it is = 101 and 201 
+respectfully and changing the role from frontend developer to full stack developer'''*/
 
 UPDATE employee_project
 SET role = 'Full Stack Developer'
@@ -85,3 +85,103 @@ WHERE employee_num_e = 101 AND project_num_p = 201;
 
 DELETE FROM employee
 WHERE num_e = 103;
+
+
+---Data query language checkpoint
+---Question 1
+/*Write a query to retrieve the names of employees who are assigned to more than one project,
+including the total number of projects for each employee.*/
+
+SELECT e.name, COUNT(ep.project_num_p) AS total_projects
+FROM employee e
+JOIN employee_project ep ON e.num_e = ep.employee_num_e
+GROUP BY e.name
+HAVING COUNT(ep.project_num_p) > 1;
+
+
+
+
+---question 2
+/*Write a query to retrieve the list of projects managed by each department, including the department label and manager’s name.*/
+SELECT d.label AS department_label, d.manager_name, p.title AS project_title
+FROM department d
+JOIN project p ON d.num_s = p.department_num_s;
+
+
+
+
+
+
+
+/* Question 3
+Write a query to retrieve the names of employees working on the project "Website Redesign," including their roles in the project.
+*/
+SELECT e.name, ep.role
+FROM employee e
+JOIN employee_project ep ON e.num_e = ep.employee_num_e
+JOIN project p ON p.num_p = ep.project_num_p
+WHERE p.title = 'Website Redesign';
+
+
+
+/*Question 4
+Write a query to retrieve the department with the highest number of employees,
+including the department label, manager name, and the total number of employees.
+*/
+SELECT TOP 1 d.label AS department_label, d.manager_name, COUNT(e.num_e) AS total_employees
+FROM department d
+JOIN employee e ON d.num_s = e.department_num_s
+GROUP BY d.label, d.manager_name
+ORDER BY total_employees DESC;
+
+
+
+
+
+
+/* Question 5
+Write a query to retrieve the names and positions of employees earning a salary greater than 60,000, including their department names.
+*/
+SELECT e.name, e.position, d.label AS department_label
+FROM employee e
+JOIN department d ON e.department_num_s = d.num_s
+WHERE e.salary > 60000;
+
+
+
+
+/*Question 6 
+Write a query to retrieve the number of employees assigned to each project, including the project title.
+*/
+SELECT p.title AS project_title, COUNT(ep.employee_num_e) AS employee_count
+FROM project p
+JOIN employee_project ep ON p.num_p = ep.project_num_p
+GROUP BY p.title;
+
+
+
+
+
+/*Question 7
+Write a query to retrieve a summary of roles employees have across different projects, including the employee name, project title, and role.
+*/
+SELECT e.name AS employee_name, p.title AS project_title, ep.role
+FROM employee e
+JOIN employee_project ep ON e.num_e = ep.employee_num_e
+JOIN project p ON p.num_p = ep.project_num_p;
+
+
+
+
+
+
+/*Question 8
+Write a query to retrieve the total salary expenditure for each department, including the department label and manager name.
+*/
+SELECT d.label AS department_label, d.manager_name, SUM(e.salary) AS total_salary
+FROM department d
+JOIN employee e ON d.num_s = e.department_num_s
+GROUP BY d.label, d.manager_name;
+
+
+---it is good to Note that the type of join in sql that was used in some of the questions where inner join
